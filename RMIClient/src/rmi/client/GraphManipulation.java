@@ -7,9 +7,6 @@ import rmi.registery.GraphService;
 
 public class GraphManipulation {
 	public static void main(String args[]) {
-//		if (System.getSecurityManager() == null) {
-//			System.setSecurityManager(new SecurityManager());
-//		}
 		try {
 			String name = "GraphService";
 			Registry registry = LocateRegistry.getRegistry("localhost");

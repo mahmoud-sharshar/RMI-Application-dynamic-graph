@@ -8,27 +8,24 @@ import java.rmi.server.UnicastRemoteObject;
 import rmi.registery.GraphService;
 
 public class GraphServer implements GraphService {
-
+	
+	private Graph localGraph;
 	public GraphServer() {
 		super();
+		localGraph = new Graph("local_graph.txt");
 	}
 
 	@Override
 	public String excuteBatchOperations(String batch) throws RemoteException {
-		// TODO Auto-generated method stub
 		return batch;
 	}
 
 	@Override
 	public String getCurrentGraph() throws RemoteException {
-		// TODO Auto-generated method stub
-		return "Test current graph method!";
+		return localGraph.serializeGraph();
 	}
 
 	public static void main(String[] args) {
-//		if (System.getSecurityManager() == null) {
-//			System.setSecurityManager(new SecurityManager());
-//		}
 		try {
 			String name = "GraphService";
 			GraphService server = new GraphServer();

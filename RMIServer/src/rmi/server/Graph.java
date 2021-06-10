@@ -3,7 +3,10 @@ package rmi.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,6 +62,22 @@ public class Graph {
 		return -1;
 	}
 
+	public String serializeGraph() {
+		String edges = "";
+		Iterator<Entry<Integer, HashSet<Integer>>> hmIterator = graphEdges.entrySet().iterator();
+		while (hmIterator.hasNext()) {
+			@SuppressWarnings("rawtypes")
+			Map.Entry mapElement = (Map.Entry) hmIterator.next();
+			int node = (int) mapElement.getKey();
+			@SuppressWarnings("unchecked")
+			HashSet<Integer> neighbors = (HashSet<Integer>) mapElement.getValue();
+			for (int n : neighbors) {
+				edges += (node + " " + n + "\n");
+			}
+		}
+		return edges;
+	}
+
 	private void initializeGraph(String graphFilePath) {
 		ArrayList<String> edgesLines = parseEdgesFromFile(graphFilePath);
 		for (int i = 0; i < edgesLines.size(); i++) {
@@ -76,7 +95,7 @@ public class Graph {
 			Scanner myReader = new Scanner(myObj);
 			while (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
-				if (data == "S" || data == "s")
+				if (data.equals("S") || data.equals("s"))
 					break;
 				edges.add(data);
 			}

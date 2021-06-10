@@ -45,7 +45,7 @@ public class Graph {
 		Queue<Integer> queue = new LinkedList<>();
 		HashMap<Integer, Integer> distances = new HashMap<>();
 		queue.add(node1);
-		distances.put(0, 0);
+		distances.put(node1, 0);
 		while (queue.isEmpty() == false) {
 			int node = queue.remove();
 			int nodeDist = distances.get(node);

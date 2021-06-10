@@ -11,16 +11,22 @@ import java.util.Queue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Graph {
 	private HashMap<Integer, HashSet<Integer>> graphEdges;
+	private ReadWriteLock readWriteLock;
 
+	
 	public Graph(String graphFilePath) {
 		graphEdges = new HashMap<Integer, HashSet<Integer>>();
+		readWriteLock = new ReentrantReadWriteLock();
 		initializeGraph(graphFilePath);
 	}
 
 	public void addEdge(int node1, int node2) {
+		readWriteLock.writeLock().lock();
 		if (graphEdges.get(node1) == null) {
 			HashSet<Integer> neighbors = new HashSet<>();
 			neighbors.add(node2);
@@ -32,16 +38,20 @@ public class Graph {
 			HashSet<Integer> neighbors = new HashSet<>();
 			graphEdges.put(node2, neighbors);
 		}
+		readWriteLock.writeLock().unlock();
 	}
 
 	public void removeEdge(int node1, int node2) {
+		readWriteLock.writeLock().lock();
 		HashSet<Integer> node1Neighbors = graphEdges.get(node1);
 		if (node1Neighbors != null) {
 			node1Neighbors.remove(node2);
 		}
+		readWriteLock.writeLock().unlock();
 	}
 
 	public int getShortestPath(int node1, int node2) {
+		readWriteLock.readLock().lock();
 		Queue<Integer> queue = new LinkedList<>();
 		HashMap<Integer, Integer> distances = new HashMap<>();
 		queue.add(node1);
@@ -49,8 +59,10 @@ public class Graph {
 		while (queue.isEmpty() == false) {
 			int node = queue.remove();
 			int nodeDist = distances.get(node);
-			if (node == node2)
+			if (node == node2) {
+				readWriteLock.readLock().unlock();
 				return nodeDist;
+			}
 			HashSet<Integer> neighbors = graphEdges.get(node);
 			for (int n : neighbors) {
 				if (distances.get(n) == null) {
@@ -59,10 +71,12 @@ public class Graph {
 				}
 			}
 		}
+		readWriteLock.readLock().unlock();
 		return -1;
 	}
 
 	public String serializeGraph() {
+		readWriteLock.readLock().lock();
 		String edges = "";
 		Iterator<Entry<Integer, HashSet<Integer>>> hmIterator = graphEdges.entrySet().iterator();
 		while (hmIterator.hasNext()) {
@@ -75,6 +89,7 @@ public class Graph {
 				edges += (node + " " + n + "\n");
 			}
 		}
+		readWriteLock.readLock().unlock();
 		return edges;
 	}
 

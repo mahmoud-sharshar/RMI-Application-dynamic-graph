@@ -67,6 +67,7 @@ public class Graph {
 				return nodeDist;
 			}
 			HashSet<Integer> neighbors = graphEdges.get(node);
+			if(neighbors == null ) break;
 			for (int n : neighbors) {
 				if (distances.get(n) == null) {
 					queue.add(n);

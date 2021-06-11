@@ -1,5 +1,8 @@
 package rmi.client;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -12,15 +15,21 @@ public class Client extends Thread {
 	public void run() {
 			try {
 				System.err.println("ClientID: "+ Thread.currentThread().getId());
-				GraphService graphService = getGraphService();
-				ArrayList<String> requests = generateRequestsBatch();
+				GraphService graphService = this.getGraphService();
+				ArrayList<Request> requests = this.generateRequestsBatch();
 				Random randomGenerator = new Random();
-				for(String request : requests) {
-					//System.err.println("ClientID: "+ Thread.currentThread().getId() + "  " + request);
+				for(Request request : requests) {
+					long startTime = System.currentTimeMillis();
+					String response = graphService.excuteBatchOperations(request.getOperations());
+					long endTime = System.currentTimeMillis();
+					long responseTime = endTime-startTime;
+					request.setReponse(response);
+					request.setResponseTime(responseTime);
+					this.logInformation(request);
 					int sleepTime = randomGenerator.nextInt(100);
 					Thread.sleep(sleepTime);
 				}
-			} catch (RemoteException | NotBoundException | InterruptedException e) {
+			} catch (NotBoundException | InterruptedException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -33,17 +42,35 @@ public class Client extends Thread {
 		return graphService;
 	}
 	
-	private ArrayList<String> generateRequestsBatch(){
-		ArrayList<String> requests = new ArrayList<String>();
-		RequestGenerator requestGenerator = new RequestGenerator(0.5, 10 , 20);
+	private ArrayList<Request> generateRequestsBatch(){
+		ArrayList<Request> requests = new ArrayList<Request>();
 		Random randomGenerator = new Random();
-		int numOfRequests = randomGenerator.nextInt(10)+1;
+//		int writePercentage = randomGenerator.nextInt(100)+1;
+		RequestGenerator requestGenerator = new RequestGenerator(0.2, 50 , 15);
+		int numOfRequests =  150 ;// randomGenerator.nextInt(10)+1;
 		for(int i=0;i<numOfRequests;i++) {
-			String request = requestGenerator.getReqeust();
+			Request request = requestGenerator.getReqeust();
+//			request.setWritePercentage(writePercentage);
 			requests.add(request);
 		}
+		
 		return requests;
 	}
 	
+	private void logInformation(Request request) throws IOException {
+		File logFile = new File("log"+Thread.currentThread().getId() + ".txt");
+		if(!logFile.exists()) {
+			logFile.createNewFile();
+		}
+		FileWriter logFileWriter = new FileWriter(logFile , true);
+		logFileWriter.write(request.getWritePercentage() + "," + request.getResponseTime() + "\n");
+//		logFileWriter.write("Request : \n");
+//		logFileWriter.write(request);
+//		logFileWriter.write("\n Response : \n");
+//		logFileWriter.write(response);
+//		logFileWriter.write("response time : " + responseTime + "\n");
+//		logFileWriter.write("-------------------------------\n");
+		logFileWriter.close();
+	}
 
 }

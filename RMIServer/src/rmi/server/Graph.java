@@ -17,8 +17,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class Graph {
 	private HashMap<Integer, HashSet<Integer>> graphEdges;
 	private ReadWriteLock readWriteLock;
+	private AppLogger logger = new AppLogger();
 
-	
 	public Graph(String graphFilePath) {
 		graphEdges = new HashMap<Integer, HashSet<Integer>>();
 		readWriteLock = new ReentrantReadWriteLock();
@@ -38,6 +38,7 @@ public class Graph {
 			HashSet<Integer> neighbors = new HashSet<>();
 			graphEdges.put(node2, neighbors);
 		}
+		logger.logInfo("Add new edge to the graph: " + node1 + " " + node2);
 		readWriteLock.writeLock().unlock();
 	}
 
@@ -47,6 +48,7 @@ public class Graph {
 		if (node1Neighbors != null) {
 			node1Neighbors.remove(node2);
 		}
+		logger.logInfo("Remove edge from the graph: " + node1 + " " + node2);
 		readWriteLock.writeLock().unlock();
 	}
 
@@ -61,6 +63,7 @@ public class Graph {
 			int nodeDist = distances.get(node);
 			if (node == node2) {
 				readWriteLock.readLock().unlock();
+				logger.logInfo("Query: shortest path distance between: " + node1 + " and " + node2 + " is " + nodeDist);
 				return nodeDist;
 			}
 			HashSet<Integer> neighbors = graphEdges.get(node);
@@ -71,6 +74,7 @@ public class Graph {
 				}
 			}
 		}
+		logger.logInfo("Query: There is no path between " + node1 + " and " + node2);
 		readWriteLock.readLock().unlock();
 		return -1;
 	}
@@ -94,6 +98,7 @@ public class Graph {
 	}
 
 	private void initializeGraph(String graphFilePath) {
+		logger.logInfo("Start initializing the local graph." );
 		ArrayList<String> edgesLines = parseEdgesFromFile(graphFilePath);
 		for (int i = 0; i < edgesLines.size(); i++) {
 			String[] nodes = edgesLines.get(i).split(" ", 2);
@@ -101,6 +106,7 @@ public class Graph {
 			int node2 = Integer.parseInt(nodes[1]);
 			addEdge(node1, node2);
 		}
+		logger.logInfo("Initial graph is initialized successfully." );
 	}
 
 	private ArrayList<String> parseEdgesFromFile(String graphFilePath) {

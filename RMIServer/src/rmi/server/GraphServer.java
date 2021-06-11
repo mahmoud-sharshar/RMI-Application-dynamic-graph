@@ -10,6 +10,7 @@ import rmi.registery.GraphService;
 public class GraphServer implements GraphService {
 
 	private Graph localGraph;
+	private static AppLogger logger = new AppLogger();
 
 	public GraphServer() {
 		super();
@@ -18,8 +19,11 @@ public class GraphServer implements GraphService {
 
 	@Override
 	public String excuteBatchOperations(String batch) throws RemoteException {
+		logger.logInfo("New batch request");
 		Request newRequest = parseBatchRequest(batch);
-		return newRequest.performAllOperations();
+		String results = newRequest.performAllOperations();
+		logger.logInfo("End batch request");
+		return results;
 	}
 
 	@Override
@@ -47,11 +51,10 @@ public class GraphServer implements GraphService {
 			GraphService stub = (GraphService) UnicastRemoteObject.exportObject(server, 0);
 			Registry registry = LocateRegistry.getRegistry(); // run on local host and on post 1099
 			registry.rebind(name, stub);
-			System.out.println("GraphServer bound");
+			logger.logInfo("Server register graph service into RMI registery");
 		} catch (Exception e) {
-			System.err.println("GraphServer exception:");
+			logger.logInfo("GraphServer exception while registering graph service into RMI registery");
 			e.printStackTrace();
 		}
 	}
-
 }

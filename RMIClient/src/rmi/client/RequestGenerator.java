@@ -57,8 +57,8 @@ public class RequestGenerator {
 	}
 	
 	private String generateWriteOperation() {
-		int addOperation = operRandomGenerator.nextInt(2);
-		if(addOperation == 0) {
+		int isAdd = operRandomGenerator.nextInt(2);
+		if(isAdd== 1) {
 			return "A " + generateTwoNodes();
 		}else {
 			return "D " + generateTwoNodes();

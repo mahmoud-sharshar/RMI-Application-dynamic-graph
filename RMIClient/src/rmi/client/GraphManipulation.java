@@ -11,11 +11,10 @@ import rmi.registery.GraphService;
 public class GraphManipulation {
 	public static void main(String args[]) {
 		try {
-//			String name = "GraphService";
-//			Registry registry = LocateRegistry.getRegistry("localhost");
-//			GraphService graphService = (GraphService) registry.lookup(name);
-			RequestGenerator generator = new RequestGenerator(0.3, 10 , 20);
-			System.out.println(generator.getReqeust());
+			for(int i=0;i<2;i++) {
+				Client clientThread = new Client();
+				clientThread.start();
+			}
 		} catch (Exception e) {
 			System.err.println("GraphService exception:");
 			e.printStackTrace();

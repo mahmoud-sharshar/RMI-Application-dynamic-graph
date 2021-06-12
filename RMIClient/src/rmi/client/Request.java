@@ -6,9 +6,9 @@ public class Request {
 	private long responseTime ;
 	private String reponse ;
 	private double writePercentage ;
-	public Request(String operations , int writePercentage) {
+	public Request(String operations , int numOfOperations) {
 		this.operations = operations;
-		this.writePercentage = writePercentage;
+		this.numOfOperations = numOfOperations;
 	}
 	public String getOperations() {
 		return operations;

@@ -99,7 +99,6 @@ public class Graph {
 			int node = queue.remove();
 			int nodeDist = distances.get(node);
 			if (node == node2) {
-				readWriteLock.readLock().unlock();
 				return nodeDist;
 			}
 			HashSet<Integer> neighbors = graphEdges.get(node);

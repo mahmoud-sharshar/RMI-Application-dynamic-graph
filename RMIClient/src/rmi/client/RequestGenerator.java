@@ -29,22 +29,21 @@ public class RequestGenerator {
 	}
 	
 	public Request getReqeust() {
-		int writePercentage = operRandomGenerator.nextInt(100)+1;
-		constructRequest(writePercentage);
+		
+		constructRequest();
 		String parsedRequest = "" ;
 		for(String oper : operations) {
 			parsedRequest+=oper;
 			parsedRequest+="\n";
 		}
 		parsedRequest+="F";
-		return new Request(parsedRequest , writePercentage);
+		return new Request(parsedRequest , operations.size());
 	}
 	
-	private  void constructRequest(int writePercentage) {
+	private  void constructRequest() {
 		this.operations = new ArrayList<String>();
-		writePercentage /= 100 ;
 		for(int i=0;i<numOfQueries;i++) {
-			if(i < numOfQueries*writePercentage) {
+			if(i < numOfQueries*writingPercentage) {
 				operations.add(generateWriteOperation());
 			}else {
 				operations.add(generateReadOperation());

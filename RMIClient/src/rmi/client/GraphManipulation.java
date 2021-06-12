@@ -1,12 +1,5 @@
 package rmi.client;
 
-import java.io.File;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-import rmi.registery.GraphService;
 
 public class GraphManipulation {
 	public static void main(String args[]) {

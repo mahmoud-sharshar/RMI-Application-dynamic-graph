@@ -20,7 +20,7 @@ public class Client extends Thread {
 				Random randomGenerator = new Random();
 				for(Request request : requests) {
 					long startTime = System.currentTimeMillis();
-					String response = graphService.excuteBatchOperations(request.getOperations());
+					String response = graphService.excuteBatchOperations(request.getOperations(), 'D');
 					long endTime = System.currentTimeMillis();
 					long responseTime = endTime-startTime;
 					request.setReponse(response);

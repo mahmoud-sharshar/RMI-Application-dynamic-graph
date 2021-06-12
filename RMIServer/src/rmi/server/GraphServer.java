@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 import rmi.registery.GraphService;
 
@@ -11,17 +12,20 @@ public class GraphServer implements GraphService {
 
 	private Graph localGraph;
 	private static AppLogger logger = new AppLogger();
+	private ArrayList<Request> requests;
 
 	public GraphServer() {
 		super();
 		localGraph = new Graph("local_graph.txt");
+		requests = new ArrayList<>();
 	}
 
 	@Override
-	public String excuteBatchOperations(String batch) throws RemoteException {
+	public String excuteBatchOperations(String batch, char algoType) throws RemoteException {
 		logger.logInfo("New batch request");
 		Request newRequest = parseBatchRequest(batch);
-		String results = newRequest.performAllOperations();
+		String results = newRequest.performAllOperations(algoType);
+		requests.add(newRequest);
 		logger.logInfo("End batch request");
 		return results;
 	}

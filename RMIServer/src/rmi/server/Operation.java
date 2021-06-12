@@ -6,7 +6,7 @@ public class Operation {
 	private int node2;
 	private Graph graph;
 	private int result;
-	private long taken_time;
+	private long takenTime;
 
 	public Operation(char type, int node1, int node2, Graph graph) {
 		this.type = type;
@@ -15,10 +15,10 @@ public class Operation {
 		this.graph = graph;
 	}
 
-	public void perform() {
+	public void perform(char algoType) {
 		long startTime = System.nanoTime();
 		if (this.type == 'Q' || this.type == 'q') {
-			this.result = this.graph.getShortestPath(node1, node2);
+			this.result = this.graph.getShortestPath(node1, node2, algoType);
 		} else if (this.type == 'A' || this.type == 'a') {
 			this.graph.addEdge(node1, node2);
 		} else if (this.type == 'D' || this.type == 'd') {
@@ -26,7 +26,7 @@ public class Operation {
 		} else {
 			System.out.println("Not supported operation");
 		}
-		this.taken_time = System.nanoTime() - startTime;
+		this.takenTime = System.nanoTime() - startTime;
 	}
 
 	public int getQueryResult() {
@@ -35,6 +35,10 @@ public class Operation {
 
 	public char getType() {
 		return this.type;
+	}
+
+	public long getTakenTime() {
+		return takenTime;
 	}
 
 }

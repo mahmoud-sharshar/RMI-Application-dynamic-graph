@@ -4,7 +4,7 @@ RMI (Remote method invocation) applications often comprise two separate programs
 - A typical server program creates some remote objects, makes references to these objects accessible, and waits for clients to invoke methods on these objects.
 - A typical client program obtains a remote reference to one or more remote objects on a server and then invokes methods on them.
 - RMI provides the mechanism by which the server and the client communicate and pass information back and forth. Such an application is sometimes referred to as a distributed object application.
-
+![RMI Architecture](https://www.tutorialspoint.com/java_rmi/images/registry.jpg)
 
 ## Code Organization
 The application consiste from three parts:
